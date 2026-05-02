@@ -6,7 +6,7 @@
 <title>Training Log Dashboard V4</title>
 <link rel="preconnect" href="https://api.fontshare.com" />
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=boska@400,500,700&display=swap" rel="stylesheet">
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root,[data-theme="light"]{--bg:#f7f6f2;--surface:#f9f8f5;--surface2:#fbfbf9;--border:#d4d1ca;--text:#28251d;--muted:#68665f;--inverse:#f9f8f4;--primary:#01696f;--primary2:#cedcd8;--blue:#006494;--orange:#da7101;--green:#437a22;--purple:#7a39bb;--red:#a13544;--radius:14px;--shadow:0 4px 12px rgba(0,0,0,.07);--fontd:'Boska',Georgia,serif;--fontb:'Satoshi',Inter,sans-serif}
 [data-theme="dark"]{--bg:#171614;--surface:#1c1b19;--surface2:#201f1d;--border:#393836;--text:#cdccca;--muted:#9a9894;--inverse:#2b2a28;--primary:#4f98a3;--primary2:#313b3b;--blue:#5591c7;--orange:#fdab43;--green:#6daa45;--purple:#a86fdf;--red:#dd6974;--shadow:0 4px 12px rgba(0,0,0,.3)}
@@ -398,7 +398,7 @@ function renderCharts() {
   });
 }
 
-function saveLocal() { localStorage.setItem(storageKey, JSON.stringify(data)); }
+async function saveLocal() { localStorage.setItem(storageKey, JSON.stringify(data));   if(window._sb){ try{ const row = data[selectedIndex]; await window._sb.from('training_log').upsert({date:row.Date,week_number:parseInt(row.Week)||null,phase:row.Phase,day_of_week:row.Day,planned_type:row.Planned_Type,planned_duration_min:parseInt(row.Planned_Duration_Min)||null,planned_distance_km:parseFloat(row.Target_Distance_km)||null,planned_intensity:row.Intensity,planned_notes:row.Planned_Notes,goal:row.Goal,status:row.Status,actual_type:row.Actual_Type,actual_distance_km:parseFloat(row.Actual_Distance_km)||null,actual_duration_min:parseInt(row.Actual_Duration_Min)||null,actual_pace_min_per_km:parseFloat(row.Actual_Pace_min_per_km)||null,avg_hr:parseInt(row.Avg_HR)||null,rpe:parseInt(row.RPE)||null,bike_duration_min:parseInt(row.Bike_Duration_Min)||null,strength_duration_min:parseInt(row.Strength_Duration_Min)||null,notes:row.Notes,feeling:row.Feeling},{onConflict:'date'}); }catch(e){console.warn('Supabase sync error',e);} } }
 
 function renderAll() {
   renderEditor(); 
